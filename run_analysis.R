@@ -20,7 +20,7 @@ Activities <- read.table(file.path(dataPath,"activity_labels.txt"))
 names(Activities) <- c("NActivities", "Activities")
 
 # Features
-Features <- read.table(file.path(dataPath,"activity_labels.txt"), as.is = TRUE)
+Features <- read.table(file.path(dataPath,"features.txt"), as.is = TRUE)
 
 
 # Training
@@ -51,7 +51,7 @@ Final_Data_Set <- rbind(Training_Data_Set, Test_Data_Set,make.row.names
 # remove individual data tables to save memory
 rm(X_Train, Y_Train, Training_Data_Set, X_Test, Y_Test, Test_Data_Set, test, training)
 
-coln <- c("Subject","Activities",features[,2])
+coln <- c("Subject","Activities",Features[,2])
 names(Final_Data_Set) <- coln
 
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
@@ -81,5 +81,6 @@ library(reshape2)
 
 # create the tidy data set
 m <- melt(goodData, id=c("Subject","Activities"))
-F_Data_Set <- as.data.frame(dcast(m, Subject+Subject ~ variable, mean))
+F_Data_Set <- as.data.frame(dcast(m, Subject+Activities ~ variable, mean))
 
+write.table(F_Data_Set,file.path(dataPath,"tidy_DataSet.txt"), row.names = FALSE)
